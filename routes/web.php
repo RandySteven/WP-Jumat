@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PostController;
 use App\Models\Post;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,16 +19,24 @@ use Illuminate\Support\Facades\Route;
 //Route::post() ==> kirim data
 //Route::patch() / Route::put() ==> update
 //Route::delete() ==> delete data
-Route::view('/', 'welcome')->name('welcome');
+Route::get('/', function(){
+    return view('layouts.app');
+});
 Route::view('/asoidnasoidjsaoidjoi', 'about')->name('about');
 Route::view('/contact', 'contact')->name('contact');
 
-Route::prefix('/post')->group(function(){
-    Route::get('', [PostController::class, 'index'])->name('post.index');
-    Route::get('create', [PostController::class, 'create'])->name('post.create');
-    Route::post('store', [PostController::class, 'store'])->name('post.store');
-    Route::get('{post:slug}', [PostController::class, 'show'])->name('post.show');
-    Route::get('edit/{post:slug}', [PostController::class, 'edit'])->name('post.edit');
-    Route::patch('update/{post:slug}', [PostController::class, 'update'])->name('post.update');
-    Route::delete('delete/{post:slug}', [PostController::class, 'delete'])->name('post.delete');
+Auth::routes(['verify'=>true]);
+Route::middleware('auth')->group(function(){
+    Route::prefix('/post')->group(function(){
+        Route::get('', [PostController::class, 'index'])->name('post.index')->withoutMiddleware('auth');
+        Route::get('create', [PostController::class, 'create'])->name('post.create')->middleware('verified');
+        Route::post('store', [PostController::class, 'store'])->name('post.store');
+        Route::get('{post:slug}', [PostController::class, 'show'])->name('post.show')->withoutMiddleware('auth');
+        Route::get('edit/{post:slug}', [PostController::class, 'edit'])->name('post.edit');
+        Route::patch('update/{post:slug}', [PostController::class, 'update'])->name('post.update');
+        Route::delete('delete/{post:slug}', [PostController::class, 'delete'])->name('post.delete');
+    });
 });
+
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

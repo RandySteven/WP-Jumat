@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -22,7 +24,9 @@ class PostController extends Controller
     //Create
     //create lebih ke tampilan
     public function create(){
-        return view('post.create');
+        $categories = Category::get();
+        $tags = Tag::get();
+        return view('post.create', compact('categories', 'tags'));
     }
 
     //function store kirimin data
@@ -38,7 +42,11 @@ class PostController extends Controller
         ]);
         $attr = $request->all();
         $attr['slug'] = \Str::slug($request->title);
-        Post::create($attr);
+        $attr['category_id'] = $request->get('category_id');
+        //User bisa post setelah di login atau melakukan authentikasi
+        //Post melakukan create data
+        $post = auth()->user()->posts()->create($attr);
+        $post->tags()->attach($request->get('tags'));
         return redirect('/post')->with('success', 'Post berhasil dimasukkan');
     }
 
