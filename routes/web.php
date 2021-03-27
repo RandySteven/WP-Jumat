@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
@@ -25,11 +26,11 @@ Route::get('/', function(){
 Route::view('/asoidnasoidjsaoidjoi', 'about')->name('about');
 Route::view('/contact', 'contact')->name('contact');
 
-Auth::routes(['verify'=>true]);
+Auth::routes();
 Route::middleware('auth')->group(function(){
     Route::prefix('/post')->group(function(){
         Route::get('', [PostController::class, 'index'])->name('post.index')->withoutMiddleware('auth');
-        Route::get('create', [PostController::class, 'create'])->name('post.create')->middleware('verified');
+        Route::get('create', [PostController::class, 'create'])->name('post.create');
         Route::post('store', [PostController::class, 'store'])->name('post.store');
         Route::get('{post:slug}', [PostController::class, 'show'])->name('post.show')->withoutMiddleware('auth');
         Route::get('edit/{post:slug}', [PostController::class, 'edit'])->name('post.edit');
@@ -37,6 +38,6 @@ Route::middleware('auth')->group(function(){
         Route::delete('delete/{post:slug}', [PostController::class, 'delete'])->name('post.delete');
     });
 });
-
+Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])->name('category');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

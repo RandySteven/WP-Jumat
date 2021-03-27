@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container">
-        <form action="{{ route('post.store') }}" method="POST">
+        <form action="{{ route('post.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
               <label for="title">Title</label>
@@ -16,6 +16,16 @@
               @enderror
             </div>
             <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" id="image" placeholder="image">
+                @error('image')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+              </div>
+
+            <div class="form-group">
                 <label for="title">Category</label>
                 <select name="category_id" id="" class="form-control">
                     @foreach ($categories as $category)
@@ -25,7 +35,7 @@
               </div>
               <div class="form-group">
                 <label for="title">Tag</label>
-                <select name="tags[]" id="" class="form-control">
+                <select name="tags[]" id="" class="form-control" multiple>
                     @foreach ($tags as $tag)
                         <option value="{{ $tag->id }}">{{ $tag->tag }}</option>
                     @endforeach
