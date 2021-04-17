@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function(){
         Route::delete('delete/{post:slug}', [PostController::class, 'delete'])->name('post.delete');
     });
 });
+Route::view('about', 'about')->name('about');
+Route::view('/create-about', 'create-about')->name('create.about')->middleware(['role:admin']);
 Route::get('/categories/{category:slug}', [CategoryController::class, 'show'])->name('category');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

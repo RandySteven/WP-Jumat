@@ -61,6 +61,25 @@
                             </div>
                         </div>
 
+                        <div class="form-group row">
+                            <label for="phone" class="col-md-4 col-form-label text-md-right">{{ __('Phone') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="phone" type="text" class="form-control" name="phone" required>
+                            </div>
+                        </div>
+
+                         <div class="form-group row">
+                            <label for="phone" class="col-md-4 col-form-label text-md-right">{{ __('Role') }}</label>
+
+                            <div class="col-md-6">
+                                @foreach ($roles as $role)
+                                    <input id="{{ $role->id }}" type="radio" value="{{ $role->id }}" class="form-control" name="role" required>
+                                    <label for="{{ $role->id }}">{{ $role->name }}</label>
+                                @endforeach
+                            </div>
+                        </div>
+
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

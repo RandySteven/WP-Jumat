@@ -19,6 +19,14 @@
             </div>
         @endforeach
 
+        @auth
+            @if (Auth::user()->hasRole('admin'))
+                <div class="alert alert-success">Welcome admin</div>
+            @else
+                <div class="alert alert-success">Welcome user</div>
+            @endif
+        @endauth
+
         <div class="row ">
             @foreach ($posts as $post)
             <div class="col-4 my-4">
@@ -35,7 +43,7 @@
                       <a href="{{ route('post.show', $post) }}" class="card-link">See detail</a> <br>
                       @auth
                           <!-- if auth == true -->
-                          @if (Auth::user()->id == $post->user_id)
+                          @if (Auth::user()->id == $post->user_id || Auth::user()->hasRole('admin'))
                           <a href="{{ route('post.edit', $post) }}" class="btn btn-success">Edit</a>
                             <form action="{{ route('post.delete', $post) }}" method="POST">
                                 @csrf
